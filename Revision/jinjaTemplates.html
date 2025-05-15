@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+     <!-- //function -->
+
+    {% macro greet(abc) %}
+        <h2>Function in html, {{ abc }}</h2>
+    {% endmacro %}
+
+    <p>{{ greet("Krsna") }}</p><br>
+
+    <!-- //control statement -->
+    <!-- //if-else -->
+    {% if name == "Manav" %}
+        <p>Hare Krsna, {{ name }}</p><br>
+    {% else %}
+        <p>Hare Ram, {{ name }}</p><br>
+    {% endif %}
+
+    <!-- //for -->
+    <ul>
+        {% for fruit in fruit_list %}
+        <li>{{ fruit }}</li>
+        {% endfor %}
+    </ul>
+
+    <!-- //filter -->
+    <br><p>Filter: {{ name | lower }}</p><br>
+    <p>length: {{ fruit_list | length }}</p><br>
+    <p>capitalize: {{ "krSna" | capitalize }}</p><br>
+
+    //with
+    {% with user = "Krsna" %}
+    <p>{{ user }}</p>
+    {% endwith %}
+</body>
+</html>
