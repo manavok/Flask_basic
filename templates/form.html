@@ -15,8 +15,16 @@
             <br>
             {{ form.name.label(class_ = "text-2xl") }}
             {{ form.name(class_ = "input input-primary h-8") }}
+            <!-- Error -->
+            {% if form.name.errors %}
+            <ul class="text-red-500 text-sm mt-1">
+                {% for error in form.name.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
             <br><br>
-            {{ form.SubmitField(class_ = "btn btn-primary text-2xl") }}
+            {{ form.submit(class_ = "btn btn-primary text-2xl") }}
         </form>
 
     {% endif %}

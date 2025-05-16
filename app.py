@@ -1,7 +1,7 @@
 from flask import Flask, render_template, make_response, url_for
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, Length
 app = Flask(__name__)
 
 app.config["SECRET_KEY"] = 'Krnsa'
@@ -12,8 +12,9 @@ app.config['MYSQL_PASSWORD'] = 'MitManav@4703'
 app.config['MYSQL_DB'] = 'flask_db'
 
 class Myform(FlaskForm):
-    name = StringField("Name: ",validators=[DataRequired()]);
-    SubmitField = SubmitField("Submit")
+    name = StringField("Name: ",
+                       validators=[DataRequired(), Length(min = 3, max=10)]);
+    submit = SubmitField("Submit")
 
 
 @app.route('/')
