@@ -1,6 +1,14 @@
 {% extends "basic.html" %}
 
 {% block content %}
+
+ <div class="alert alert-success alert-soft" >
+        {% for message in get_flashed_messages() %}
+            <span>{{ message }}</span>
+        {% endfor %}
+</div>
+
+
         <div class="hero bg-base-200 min-h-screen">
   <div class="hero-content flex-col lg:flex-row-reverse">
     <img

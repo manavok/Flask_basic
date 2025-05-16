@@ -5,6 +5,12 @@
 
 {% block content %}
     {% if name %}
+    <div class="alert alert-success alert-soft" >
+        {% for message in get_flashed_messages() %}
+            <span>{{ message }}</span>
+        {% endfor %}
+    </div>
+    
         <h1>Hare Krsna, {{ name }}</h1>
     {% else %}
     <!-- form -->

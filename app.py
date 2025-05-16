@@ -1,4 +1,4 @@
-from flask import Flask, render_template, make_response, url_for
+from flask import Flask, render_template, make_response, url_for, flash
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, Length
@@ -20,6 +20,7 @@ class Myform(FlaskForm):
 
 @app.route('/')
 def home_page():
+    flash("Welcom To My Page, Hare Krsna!")
     fruit_list = ["apple", "Banana", "Cherry"]
     msg = "<h1>My name is <strong>Manav</strong></h1>"
     html_content = render_template("homePage.html",
@@ -29,6 +30,7 @@ def home_page():
     return response;
 @app.route('/market')
 def market_page():
+    flash("Welcom to my market")
     fruit_list = ["apple", "Banana", "Cherry"]
     response = make_response(render_template("marketPage.html", fruit_list = fruit_list))
     return response
@@ -54,6 +56,7 @@ def form_page():
     if form.validate_on_submit(): # if submit succcessful=>return true
         name = form.name.data
         form.name.data = ''
+        flash("Form Submitted Sucessfully!!")
     
     return render_template('form.html',
                            name = name,
