@@ -1,6 +1,6 @@
 from flask import Flask, render_template, make_response, url_for
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
+from wtforms import StringField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, Length
 app = Flask(__name__)
 
@@ -15,7 +15,8 @@ class Myform(FlaskForm):
     name = StringField("Name: ",
                        validators=[DataRequired(), Length(min = 3, max=10)]);
     submit = SubmitField("Submit")
-
+    textArea = TextAreaField("Suggestion:",
+                             validators= [DataRequired()])
 
 @app.route('/')
 def home_page():
