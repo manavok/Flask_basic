@@ -1,0 +1,23 @@
+{% extends 'basic.html' %}
+{% block title %}
+    form
+{% endblock %}
+
+{% block content %}
+    {% if name %}
+        <h1>Hare Krsna, {{ name }}</h1>
+    {% else %}
+    <!-- form -->
+        <h1 class="text-5xl mx-20">Enter Your Name</h1>
+        
+        <form method="post" class="mx-3">
+            {{ form.hidden_tag() }}
+            <br>
+            {{ form.name.label(class_ = "text-2xl") }}
+            {{ form.name(class_ = "input input-primary h-8") }}
+            <br><br>
+            {{ form.SubmitField(class_ = "btn btn-primary text-2xl") }}
+        </form>
+
+    {% endif %}
+{% endblock %}

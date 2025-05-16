@@ -1,12 +1,19 @@
 from flask import Flask, render_template, make_response, url_for
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField
+from wtforms.validators import DataRequired
 app = Flask(__name__)
+
+app.config["SECRET_KEY"] = 'Krnsa'
 
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'       # e.g., 'root'
 app.config['MYSQL_PASSWORD'] = 'MitManav@4703'
 app.config['MYSQL_DB'] = 'flask_db'
 
-
+class Myform(FlaskForm):
+    name = StringField("Name: ",validators=[DataRequired()]);
+    SubmitField = SubmitField("Submit")
 
 
 @app.route('/')
@@ -36,3 +43,16 @@ def not_found_error(error):
 @app.errorhandler(500)
 def server_error(error):
     return render_template('500.html'), 500
+
+@app.route('/form', methods = ["GET", "POST"])
+def form_page():
+    name = None
+    form = Myform()
+    # validate form
+    if form.validate_on_submit(): # if submit succcessful=>return true
+        name = form.name.data
+        form.name.data = ''
+    
+    return render_template('form.html',
+                           name = name,
+                           form = form)
