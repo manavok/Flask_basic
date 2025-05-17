@@ -1,7 +1,8 @@
 from flask import Flask, render_template, make_response, url_for, flash
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, TextAreaField
-from wtforms.validators import DataRequired, Length
+from wtforms import StringField, SubmitField, TextAreaField, EmailField
+from wtforms.validators import DataRequired, Length, Email
+
 app = Flask(__name__)
 
 app.config["SECRET_KEY"] = 'Krnsa'
@@ -13,10 +14,13 @@ app.config['MYSQL_DB'] = 'flask_db'
 
 class Myform(FlaskForm):
     name = StringField("Name: ",
-                       validators=[DataRequired(), Length(min = 3, max=10)]);
+                       validators=[DataRequired(), Length(min = 3, max=10)],
+                       render_kw = {'class': 'text-2xl'});
+    email = EmailField("Email: ",
+                        validators=[DataRequired(),Email()],
+                        render_kw={'class' : 'input input-primary h-8', 'placeholder': 'abc123@gmail.com', 'type': 'email'})
     submit = SubmitField("Submit")
-    textArea = TextAreaField("Suggestion:",
-                             validators= [DataRequired()])
+    
 
 @app.route('/')
 def home_page():

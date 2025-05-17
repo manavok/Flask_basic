@@ -16,17 +16,21 @@
     <!-- form -->
         <h1 class="text-5xl mx-20">Enter Your Name</h1>
         
-        <form method="post" class="mx-3">
+        <form method="post" class="mx-3 space-y-4 flex flex-col">
             {{ form.hidden_tag() }}
             <br>
-            {{ form.name.label(class_ = "text-2xl") }}
-            {{ form.name(class_ = "input input-primary h-8", placeholder="Enter Your Name") }}
-            <br>
-            {{ form.textArea.label(class_ = "text-2xl") }}
-            {{ form.textArea(class_ = "input input-primary", placeholder="Enter Your Suggestion") }}
-            <br><br>
-            <!-- Submit Button -->
-            {{ form.submit(class_ = "btn btn-primary text-2xl") }}
+            <div class="Name_feild">
+                {{ form.name.label(class_ = "text-2xl") }}
+                {{ form.name(class_ = "input input-primary h-8", placeholder="Enter Your Name") }}
+            </div>
+            <div class="Email_feild">
+                {{ form.email.label(class_ = "text-2xl") }}
+                {{ form.email() }}
+            </div>
+            <div class="submit_button">
+                <!-- Submit Button -->
+                {{ form.submit(class_ = "btn btn-primary text-2xl") }}
+            </div>
         </form>
 
     {% endif %}
