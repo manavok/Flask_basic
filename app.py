@@ -1,20 +1,36 @@
-from flask import Flask, render_template, make_response, url_for, flash
+from flask import Flask, render_template, make_response, url_for, flash, redirect
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField, EmailField
 from wtforms.validators import DataRequired, Length, Email
-
+from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 app = Flask(__name__)
 
+
+# add database
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///myDataBase.db'
+# secret key
 app.config["SECRET_KEY"] = 'Krnsa'
 
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'       # e.g., 'root'
-app.config['MYSQL_PASSWORD'] = 'MitManav@4703'
-app.config['MYSQL_DB'] = 'flask_db'
+# initialize database
+db = SQLAlchemy(app)
+# flask-sqlAlchemy- defining model
+class dataBase(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    name = db.Column(db.String(20), nullable = False)
+    email = db.Column(db.String(20), nullable = False, unique=True)
+    date_add = db.Column(db.DateTime, default = datetime.now())
 
+    # Create a string
+    def __repr__(self):
+        return f"<name { self.name }>"
+        
+
+
+# Flask-Form
 class Myform(FlaskForm):
     name = StringField("Name: ",
-                       validators=[DataRequired(), Length(min = 3, max=10)],
+                       validators=[DataRequired(), Length(min = 3, max=20)],
                        render_kw = {'class': 'text-2xl'});
     email = EmailField("Email: ",
                         validators=[DataRequired(),Email()],
@@ -32,6 +48,7 @@ def home_page():
                                     msg=msg ) 
     response = make_response(html_content);
     return response;
+
 @app.route('/market')
 def market_page():
     flash("Welcom to my market")
@@ -47,10 +64,10 @@ def not_found_error(error):
     response.status_code = 404
     return response
 
-#internal server error
-@app.errorhandler(500)
-def server_error(error):
-    return render_template('500.html'), 500
+# #internal server error
+# @app.errorhandler(500)
+# def server_error(error):
+#     return render_template('500.html'), 500
 
 @app.route('/form', methods = ["GET", "POST"])
 def form_page():
@@ -65,3 +82,44 @@ def form_page():
     return render_template('form.html',
                            name = name,
                            form = form)
+
+@app.route('/add/dataBase', methods=['GET','POST'])
+def use_database():
+    form = Myform()
+    is_same_email = False
+    if form.validate_on_submit():
+        # check email exist or not
+        existing_email = dataBase.query.filter_by(email = form.email.data).first()
+
+        if existing_email:
+            flash("Email Already Exist", category='error')
+            is_same_email = True
+        else:
+        # 1. Create a new row in database
+            new_data = dataBase(name = form.name.data, email = form.email.data )
+        # 2. Add and save it in database
+            db.session.add(new_data)
+            db.session.commit()
+
+        # clear form data after submission
+            form.name.data = ''
+            form.email.data = ''
+
+            flash("Form submitted Successfully!", category='success')
+
+    all_data = dataBase.query.order_by(dataBase.date_add.desc()).all()
+    return render_template('dataBaseUse.html',
+                           form = form,
+                           all_data = all_data,
+                        is_same_email = is_same_email )
+
+@app.route('/delete/<int:id>', methods=["Post"])
+def delete_data(id):
+    delete_row = dataBase.query.get_or_404(id) # get that row. If row not exist->return 404 error
+    db.session.delete(delete_row)
+    db.session.commit()
+    flash("❌ Entry deleted successfully!", category= 'delete')
+    return redirect(url_for("use_database"))
+
+if __name__ == '__main__':
+    app.run(debug=True)

@@ -1,0 +1,96 @@
+{% extends 'basic.html' %}
+{% block title %}
+    DataBase
+{% endblock %}
+{% block content %}
+    
+
+    <!-- form -->
+        <h1 class="text-5xl mx-20">Enter Your Name</h1>
+        
+        <form method="post" class="mx-3 space-y-4 flex flex-col">
+            {{ form.hidden_tag() }}
+            <br>
+            <div class="Name_feild">
+                {{ form.name.label(class_ = "text-2xl") }}
+                {{ form.name(class_ = "input input-primary h-8", placeholder="Enter Your Name") }}
+                {% for error in form.name.errors %}
+                    <div style="color: red;">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="Email_feild">
+                {{ form.email.label(class_ = "text-2xl") }}
+                {{ form.email() }}
+                {% for error in form.email.errors %}
+                    <div style="color: red;">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div id="same_email">
+                {% if is_same_email %}
+                {% for category, error in get_flashed_messages(with_categories = True) %}
+                {% if category == 'error' %}
+                    <div role="alert" class="alert alert-error">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span>{{ error }}</span>
+                    </div>
+                {% endif %}
+                {% endfor %}
+                {% endif %}
+            </div>
+            
+            <div class="submit_button">
+                <!-- Submit Button -->
+                {{ form.submit(class_ = "btn btn-primary text-2xl") }}
+            </div>
+        </form>
+        
+             
+            <!-- Display all data -->
+        <div id="allDataFromForm" class="space-y-4">
+            {% for data in all_data %}
+            <div class="space-x-3">
+                <div class="inline-block">
+                    <span>{{ data.id }}. <span class="text-gray-400">Name: </span>{{ data.name }} <span class="text-gray-400">Email: </span>{{ data.email }} <span class="text-gray-400">Date & Time: </span>{{ data.date_add }}</span>
+                </div>
+                <form action="{{ url_for('delete_data', id= data.id ) }}" method="post" class="inline-block">
+                    <button class="btn btn-error h-5" onclick="return confirm('Are you sure to delete data?')">Delete</button>
+                </form>
+            </div>
+            {% endfor %}
+            
+                     {% with messages = get_flashed_messages(with_categories = True) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <!-- For flashed messages on deletion of data-->
+                                {% if category == 'delete' %}
+                                    <div role="alert" class="flashed_message_on_delete_or_success_form_submission alert alert-success transition-opacity duration-500">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    <span>{{ message }}</span>
+                                </div>
+                           
+                                <!-- For flashed message on succesfull submission -->
+                                {% elif category == 'success' %}
+                                <div class="flashed_message_on_delete_or_success_form_submission alert alert-success alert-soft" >
+                                    <span>{{ message }}</span>
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+        </div>
+{% endblock %}
+{% block script %}
+        <script>
+            setTimeout(function(){
+                const msg = document.getElementsByClassName('flashed_message_on_delete_or_success_form_submission')[0]
+                if(msg){
+                    msg.style.opacity = '0'
+                    setTimeout(()=> msg.remove() , 500)
+                }
+            },2000)
+        </script>
+{% endblock %}
