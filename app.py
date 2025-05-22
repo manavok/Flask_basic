@@ -6,11 +6,15 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from config import Config
 import mysql.connector
+from flask_moment import Moment
+from datetime import datetime
 
 app = Flask(__name__)
 # MySQL
 app.config.from_object(Config)
 
+# to work with UTC
+moment = Moment(app)
 
 # add database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///myDataBase.db'
@@ -50,8 +54,10 @@ def home_page():
     msg = "<h1>My name is <strong>Manav</strong></h1>"
     html_content = render_template("homePage.html",
                                     fruit_list = fruit_list,
-                                    msg=msg ) 
+                                    msg=msg,
+                                    current_time = datetime.utcnow()  ) 
     response = make_response(html_content);
+    flash("Flash Message, Hare Krsna!")
     return response;
 
 @app.route('/market')

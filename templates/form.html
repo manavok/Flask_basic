@@ -32,6 +32,8 @@
                 {{ form.submit(class_ = "btn btn-primary text-2xl") }}
             </div>
         </form>
-
+        {% if name %}
+        <p>Hare Krsna, {{ name }}</p>
+        {% endif %}
     {% endif %}
 {% endblock %}
