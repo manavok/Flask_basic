@@ -57,7 +57,6 @@ def home_page():
                                     msg=msg,
                                     current_time = datetime.utcnow()  ) 
     response = make_response(html_content);
-    flash("Flash Message, Hare Krsna!")
     return response;
 
 @app.route('/market')
