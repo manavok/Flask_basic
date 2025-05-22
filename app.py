@@ -4,13 +4,18 @@ from wtforms import StringField, SubmitField, TextAreaField, EmailField
 from wtforms.validators import DataRequired, Length, Email
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from config import Config
+import mysql.connector
+
 app = Flask(__name__)
+# MySQL
+app.config.from_object(Config)
 
 
 # add database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///myDataBase.db'
 # secret key
-app.config["SECRET_KEY"] = 'Krnsa'
+app.config["SECRET_KEY"] = "Hare Krsna"
 
 # initialize database
 db = SQLAlchemy(app)
