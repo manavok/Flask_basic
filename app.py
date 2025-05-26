@@ -8,6 +8,11 @@ from config import Config
 import mysql.connector
 from flask_moment import Moment
 from datetime import datetime
+from dotenv import load_dotenv
+import os
+from flask_mail import Mail, Message
+
+load_dotenv()
 
 app = Flask(__name__)
 # MySQL
@@ -46,6 +51,17 @@ class Myform(FlaskForm):
                         render_kw={'class' : 'input input-primary h-8', 'placeholder': 'abc123@gmail.com', 'type': 'email'})
     submit = SubmitField("Submit")
     
+
+# flask mail
+app.config['MAIL_SERVER'] = os.getenv("MAIL_SERVER")
+app.config['MAIL_PORT'] = int(os.getenv("MAIL_PORT"))
+app.config['MAIL_USE_TLS'] = os.getenv("MAIL_USE_TLS") == 'True'
+app.config['MAIL_USERNAME'] = os.getenv("MAIL_USERNAME")
+app.config['MAIL_PASSWORD'] = os.getenv("MAIL_PASSWORD")
+app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_DEFAULT_SENDER')     # same as MAIL_USERNAME
+
+
+mail = Mail(app)
 
 @app.route('/')
 def home_page():
@@ -130,6 +146,16 @@ def delete_data(id):
     db.session.commit()
     flash("❌ Entry deleted successfully!", category= 'delete')
     return redirect(url_for("use_database"))
+
+
+# mail
+@app.route('/send-email', methods=['POST','GET'])
+def send_email():
+    msg = Message('Test Subject', recipients=['mitmanav6805@gmail.com'])
+    msg.body = 'This is a plain text email sent from Flask!'
+    mail.send(msg)
+    return 'Email sent!'
+# flask app
 
 if __name__ == '__main__':
     app.run(debug=True)
