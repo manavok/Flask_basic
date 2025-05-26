@@ -12,9 +12,9 @@ from dotenv import load_dotenv
 import os
 from flask_mail import Mail, Message
 
+app = Flask(__name__)
 load_dotenv()
 
-app = Flask(__name__)
 # MySQL
 app.config.from_object(Config)
 
@@ -58,7 +58,7 @@ app.config['MAIL_PORT'] = int(os.getenv("MAIL_PORT"))
 app.config['MAIL_USE_TLS'] = os.getenv("MAIL_USE_TLS") == 'True'
 app.config['MAIL_USERNAME'] = os.getenv("MAIL_USERNAME")
 app.config['MAIL_PASSWORD'] = os.getenv("MAIL_PASSWORD")
-app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_DEFAULT_SENDER')     # same as MAIL_USERNAME
+app.config['MAIL_DEFAULT_SENDER'] = os.getenv("MAIL_DEFAULT_SENDER")
 
 
 mail = Mail(app)
@@ -149,12 +149,16 @@ def delete_data(id):
 
 
 # mail
-@app.route('/send-email', methods=['POST','GET'])
+@app.route('/send-email')
 def send_email():
-    msg = Message('Test Subject', recipients=['mitmanav6805@gmail.com'])
-    msg.body = 'This is a plain text email sent from Flask!'
+    msg = Message(
+        subject='Hello from Flask!',
+        sender=os.getenv("MAIL_DEFAULT_SENDER"),
+        recipients=['mitmanav6805@gmail.com'],
+        body='Hare Krsna Hare Krsna, Krsna Krsna Hare Hare, Hare Rama Hare Rama, Rama Rama Hare Hare!'
+    )
     mail.send(msg)
-    return 'Email sent!'
+    return "Email sent!"
 # flask app
 
 if __name__ == '__main__':
